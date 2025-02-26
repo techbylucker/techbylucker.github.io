@@ -1,53 +1,258 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech By Lucker</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech By Lucker</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#about me">About Me</a></li>
-                <li><a href="#socials">My socials</a></li>
-              <li><a href="#Reviews">Reviews</a></li>
-            </ul>
-        </nav>
-    </header>
+  <canvas id="meshCanvas"></canvas>
+    <div class="overlay"></div> <!-- Black tint overlay  -->
 
-    <section class="hero">
-        <h1 id="typing-text"></h1>
-        <p>I Love Apple Devices and overall Tech.</p>
-    </section>
+    <div class="menu-container">
+      <div class="menu-items">
+        <a href="index.html" class="Home">Home</a>
+        <a href="about.html" class="About Me">About Me</a>
+        <a href="contact.html" class="My Socials">My Socials</a>
+        <div class="menu-slider"></div>
+      </div>
+    </div>
 
-    <section id="about me" class="content hidden">
-        <h2>About Me </h2>
-      <p>Yo! I Am Tech By Lucker, Apple Devices Lover and other Tech thingies lover</p>
-      <p>My first computer which started this everything was Acer Aspire 5750Z blue, Pentium Inside, 500 GB HDD, 4 GB of RAM with Windows 7 💻.</p>
-      <p>My current computer is Mac Mini with Apple M4 CPU, 256 GB SSD, 16 GB of RAM with macOS Sequoia 💻.</p>
-      <p>My daily driver phone is iPhone 16 Pro in white color 📱.</p>
-      <p>My daily driver watch is Apple Watch Series 9 with blue band ⌚.</p>
-      <p>I am from Czech Republic 🇨🇿.</p>
-      </section>
+  <!-- Navbar for improved interaction -->
+  <div class="navbar">
+    <a href="#section1">Section 1</a>
+    <a href="#section2">Section 2</a>
+    <a href="#section3">Section 3</a>
+  </div>
 
-    <section id="socials" class="content hidden">
-        <h2>My Socials</h2>
-        <p>You can find me here:</p>
-        <div class="social">
-            <a href="https://github.com/" target="_blank">GitHub</a>
-            <a href="https://twitter.com/" target="_blank">Twitter</a>
-        </div>
-    <section id="Reviews" class="content hidden">
-        <h2>Reviews</h2>
-      <p>Nothing here right now lol</p>
-      </section>
 
-    <footer>
-        2025 Tech By Lucker
-    </footer>
+  <!-- Centered information box -->
+  <div class="info-box">
+       <!-- Profile image on the left -->
+    <div class="profile-image">
+      <img src="flipper.jpeg" alt="Profile Image">
+    </div>
 
-    <script src="script.js"></script>
-</body>
+    <!-- Info content -->
+    <div class="profile-info">
+      <h1>Tech By Lucker</h1>
+      <h2>Apple Devices Lover</h2>
+      <p>Apple Enthusiast / Tech Lover / Apple Lover</p>
+
+    </div>
+  </div>
+
+  <script>
+
+  // Calculate actual offset based on width difference
+  const offsetX = menuRect.left - containerRect.left - (firstItem.left - containerRect.left);
+
+  // Apply dynamic width and position
+  slider.style.width = `${menuRect.width + 10}px`;
+  slider.style.transform = `translateX(${offsetX}px)`;
+
+
+    const menuItems = document.querySelectorAll('.menu-items a');
+    const slider = document.querySelector('.menu-slider');
+    const container = document.querySelector('.menu-container');
+
+    if (content[language]) {
+        // Update menu item text
+        menuItems[0].textContent = content[language].title;
+        menuItems[1].textContent = content[language].about;
+        menuItems[2].textContent = content[language].MySocials;
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const defaultActiveMenu = document.querySelector('.menu-items a.home');
+    const slider = document.querySelector('.menu-slider');
+    const container = document.querySelector('.menu-container');
+    adjustSlider(defaultActiveMenu, slider, container);
+
+    // Add hover listeners for dynamic updates
+    const menuItems = document.querySelectorAll('.menu-items a');
+    menuItems.forEach((item) => {
+        item.addEventListener('mouseenter', () => {
+            adjustSlider(item, slider, container);
+        });
+
+        item.addEventListener('mouseleave', () => {
+            adjustSlider(defaultActiveMenu, slider, container);
+        });
+    });
+});
+
+
+
+
+
+    function detectDarkReader() {
+      // Create a hidden test element
+      const testElement = document.createElement('div');
+      testElement.style.position = 'absolute';
+      testElement.style.top = '-9999px';
+      testElement.style.left = '-9999px';
+      testElement.style.backgroundColor = '#ffffff'; // Pure white background
+      testElement.style.color = '#000000'; // Pure black text
+      document.body.appendChild(testElement);
+
+      const computedStyle = getComputedStyle(testElement);
+      const backgroundColor = computedStyle.backgroundColor;
+      const color = computedStyle.color;
+
+      document.body.removeChild(testElement);
+
+      // Use multiple checks for robustness
+      const isDarkReaderActive =
+        backgroundColor !== 'rgb(255, 255, 255)' || // Background altered
+        color !== 'rgb(0, 0, 0)' || // Text color altered
+        document.querySelector('style[media*="darkreader"]') || // Check for Dark Reader-specific styles
+        document.documentElement.getAttribute('data-darkreader-mode') !== null; // Attribute-based detection
+
+      console.log("Dark Reader Detected:", isDarkReaderActive);
+      return isDarkReaderActive;
+    }
+
+    // Function to display the popup
+    function showPopup() {
+      const popup = document.createElement('div');
+      popup.className = 'darkreader-popup';
+      popup.innerHTML = `
+        <p>Dark Reader is active. Consider turning it off for better experience!</p>
+        <button onclick="this.parentElement.remove()">Close</button>
+      `;
+      document.body.appendChild(popup);
+      console.log("Popup displayed.");
+    }
+
+    // Detect and display popup
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log("DOM fully loaded.");
+      if (detectDarkReader()) {
+        showPopup();
+      }
+    });
+  </script>
+
+
+
+
+  <script>
+    document.querySelectorAll('.menu-items a').forEach((item) => {
+  item.addEventListener('mouseenter', () => {
+    document.querySelector('.home').style.color = 'white';
+  });
+  item.addEventListener('mouseleave', () => {
+    document.querySelector('.home').style.color = 'black';
+  });
+});
+
+    // Set up canvas and get context
+    const canvas = document.getElementById('meshCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const mouse = { x: null, y: null };
+    const cells = [];
+    const maxDistance = 160; // Connection radius for cells and mouse
+
+    // Calculate number of cells based on window size
+    function calculateNumCells() {
+      return Math.floor((canvas.width * canvas.height) / 7500); // Adjust divisor for density
+    }
+
+    // Create cells
+    function createCells() {
+      cells.length = 0; // Clear existing cells
+      const numCells = calculateNumCells();
+      for (let i = 0; i < numCells; i++) {
+        cells.push(new Cell());
+      }
+    }
+
+    // Resize canvas and update cells on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createCells();
+    });
+
+    // Track mouse position
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+    });
+
+    // Define the Cell class
+    class Cell {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 1 + 6 - 2; // Random radius between 3 and 8
+        this.dx = (Math.random() - 0.5) * 1.5; // Slower speed
+        this.dy = (Math.random() - 0.5) * 1.5; // Slower speed
+      }
+      update() {
+        this.x += this.dx;
+        this.y += this.dy;
+        if (this.x < 0 || this.x > canvas.width) this.dx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.dy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#000'; // Black cells
+        ctx.fill();
+      }
+    }
+
+    // Draw connections
+    function drawConnections() {
+      cells.forEach((cell1, i) => {
+        cells.slice(i + 1).forEach((cell2) => {
+          const dist = Math.hypot(cell1.x - cell2.x, cell1.y - cell2.y);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(cell1.x, cell1.y);
+            ctx.lineTo(cell2.x, cell2.y);
+            ctx.strokeStyle = `rgba(0, 0, 0, ${1 - dist / maxDistance})`;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+          }
+        });
+
+        const distToMouse = Math.hypot(cell1
+.x - mouse.x, cell1.y - mouse.y);
+        if (distToMouse < maxDistance) {
+          ctx.beginPath();
+          ctx.moveTo(cell1.x, cell1.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(0, 0, 0, ${1 - distToMouse / maxDistance})`;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+      });
+    }
+  
+    // Animation loop
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      cells.forEach(cell => {
+        cell.update();
+        cell.draw();
+      });
+      drawConnections();
+      requestAnimationFrame(animate);
+    }
+  
+    // Initialize cells and start animation
+    createCells();
+    animate();
+  </script>
+  
+  </body>
 </html>
